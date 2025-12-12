@@ -339,7 +339,7 @@ input[type="number"]:focus {
     gap: 10px;
 }
 .date-input-group input[type="number"] {
-    width: 130px;
+    width: 80px;
     text-align: center;
 }
 .date-input-group select {
