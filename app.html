@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Literasi Maternal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        <div class="logo-container">
+             <span style="font-weight:bold; color:var(--primary-color);">KKN GRADASI - Karyamukti 03</span>
+        </div>
+    </nav>
+
+    <div class="container app-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('pertumbuhan')">
+                <i class="fa-solid fa-baby"></i> Cek Tumbuh Kembang
+            </button>
+            <button class="tab-btn" onclick="switchTab('kehamilan')">
+                <i class="fa-solid fa-person-pregnant"></i> Kalender Kehamilan
+            </button>
+        </div>
+
+        <div id="pertumbuhan" class="section active">
+            <h2><i class="fa-solid fa-chart-line"></i> Pantau Tumbuh Kembang</h2>
+            
+            <div id="step-1">
+                <p class="info-text">Geser untuk memilih umur dan pilih jenis kelamin.</p>
+                
+                <div class="form-group">
+                    <label>Jenis Kelamin:</label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="gender" value="laki" checked>
+                            <span class="radio-label"><i class="fa-solid fa-mars"></i> Laki-laki</span>
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="gender" value="perempuan">
+                            <span class="radio-label"><i class="fa-solid fa-venus"></i> Perempuan</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Umur Anak: <span id="umur-display" style="color:var(--primary-color); font-size:1.2em; font-weight:bold;">0</span> Bulan</label>
+                    <div class="range-container">
+                        <span class="range-min">0</span>
+                        <input type="range" id="umur" min="0" max="24" value="0" class="slider" oninput="updateUmurDisplay(this.value)">
+                        <span class="range-max">24</span>
+                    </div>
+                </div>
+
+                <button class="action-btn" onclick="tampilkanReferensi()">Lihat Standar & Input Data</button>
+            </div>
+
+            <div id="step-2" style="display: none; margin-top: 20px;">
+                <div class="info-box">
+                    <h4 style="text-align:center;"><i class="fa-solid fa-book-medical"></i> Standar Rujukan (<span id="label-umur"></span>)</h4>
+                    <table class="ref-table">
+                        <tr><td>Berat Badan Min-Max:</td><td id="ref-bb" style="font-weight:bold">-</td></tr>
+                        <tr><td>Tinggi Badan Min-Max:</td><td id="ref-tb" style="font-weight:bold">-</td></tr>
+                    </table>
+                </div>
+
+                <h4 style="margin-top:20px; text-align:center;">Input Data Hasil Ukur:</h4>
+                <div class="form-group">
+                    <label>Berat Badan (kg):</label>
+                    <input type="number" id="berat" step="0.1" min="1" placeholder="Contoh: 6.5">
+                </div>
+                <div class="form-group">
+                    <label>Tinggi Badan (cm):</label>
+                    <input type="number" id="tinggi" step="0.1" min="10" placeholder="Contoh: 62">
+                </div>
+                <div class="form-group">
+                    <label>Lingkar Kepala (cm):</label>
+                    <input type="number" id="kepala" step="0.1" min="10" placeholder="Contoh: 35">
+                </div>
+                
+                <button class="action-btn" onclick="hitungStatus()">Analisis Sekarang</button>
+                <button class="reset-btn" onclick="resetForm()">Ulangi Pengecekan</button>
+            </div>
+            
+            <div id="hasil-anak" class="result-box"></div>
+        </div>
+
+        <div id="kehamilan" class="section">
+            <h2><i class="fa-solid fa-calendar-check"></i> Kalender Kehamilan</h2>
+            <p class="info-text" style="text-align:center;">Masukkan Tanggal HPHT (Hari Pertama Haid Terakhir) & Tanggal Cek.</p>
+            
+            <div class="form-group">
+                <label>Tanggal HPHT:</label>
+                <div class="date-input-group">
+                    <input type="number" id="hpht_d" placeholder="Tgl" min="1" max="31">
+                    <select id="hpht_m">
+                        <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+                        <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+                        <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+                        <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+                    </select>
+                    <input type="number" id="hpht_y" placeholder="Thn (2025)" min="2024">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tanggal Pengecekan:</label>
+                <div class="date-input-group">
+                    <input type="number" id="cek_d" placeholder="Tgl" min="1" max="31">
+                    <select id="cek_m"> <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+                        <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+                        <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+                        <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+                    </select>
+                    <input type="number" id="cek_y" placeholder="Thn (2025)" min="2024">
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="hitungKehamilan()">Cek Kondisi Janin</button>
+            <div id="hasil-hamil" class="result-box"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

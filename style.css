@@ -1,0 +1,548 @@
+/* =========================================
+   1. VARIABLES & GLOBAL STYLES
+   ========================================= */
+:root {
+    /* Color Palette dari Logo KKN Gradasi */
+    --primary-color: #1E6F75;   /* Teal Gelap (Warna Daun) */
+    --secondary-color: #5D4037; /* Cokelat (Warna Batang/Teks) */
+    --bg-color: #FFFDF5;        /* Krem/Putih Gading (Background Logo) */
+    --accent-color: #E0F2F1;    /* Teal Muda (Background Box) */
+    --white: #ffffff;
+    --text-color: #333333;
+    --danger-color: #c0392b;    /* Merah untuk Warning */
+    --warning-color: #f39c12;   /* Kuning/Oranye */
+    --success-color: #27ae60;   /* Hijau */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* =========================================
+   2. NAVBAR (Navigation)
+   ========================================= */
+.navbar {
+    background: var(--white);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-logo, .nav-logo-garut {
+    height: 50px;
+    object-fit: contain;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+.back-link:hover { color: var(--secondary-color); }
+
+/* =========================================
+   3. HERO SECTION (Index Page)
+   ========================================= */
+.hero {
+    /* Gradient overlay + Background Image (Opsional) */
+    background: linear-gradient(135deg, rgba(30, 111, 117, 0.95), rgba(93, 64, 55, 0.9));
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.hero-content h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.cta-button {
+    display: inline-block;
+    background: #D4AF37; /* Warna Emas */
+    color: var(--secondary-color);
+    padding: 15px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s, background 0.3s;
+}
+
+.cta-button:hover {
+    transform: scale(1.05);
+    background: #f1c40f;
+}
+
+/* =========================================
+   4. CONTENT SECTIONS & CAROUSEL
+   ========================================= */
+.section-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    color: var(--secondary-color);
+    text-align: center;
+    border-bottom: 3px solid var(--primary-color);
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 30px;
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+}
+
+.text-center { text-align: center; }
+
+/* Carousel / Slider Foto */
+.carousel-wrapper {
+    position: relative;
+    max-width: 100%;
+    margin-top: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.carousel-container {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide { min-width: 100%; }
+.slide img {
+    width: 100%;
+    height: 250px; /* Tinggi foto banner */
+    object-fit: cover;
+    display: block;
+}
+
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+.prev-btn:hover, .next-btn:hover { background: var(--primary-color); }
+
+/* =========================================
+   5. APP CONTAINER & TABS (App Page)
+   ========================================= */
+.app-container {
+    max-width: 600px;
+    margin: 30px auto;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Tabs Navigation */
+.tabs {
+    display: flex;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background: #f0f0f0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #888;
+    border-radius: 10px;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 10px rgba(30, 111, 117, 0.3);
+}
+
+.section {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+.section.active { display: block; }
+
+h2 {
+    text-align: center;
+    color: var(--secondary-color);
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+/* =========================================
+   6. FORM ELEMENTS (Custom Inputs)
+   ========================================= */
+.form-group { margin-bottom: 20px; }
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Standar Input Number */
+input[type="number"] {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background: #fafafa;
+    transition: 0.3s;
+}
+input[type="number"]:focus {
+    border-color: var(--primary-color);
+    background: white;
+    outline: none;
+}
+
+/* Custom Radio Button (Gender) */
+.radio-group {
+    display: flex;
+    gap: 15px;
+}
+
+.radio-item {
+    flex: 1;
+    cursor: pointer;
+    position: relative;
+}
+
+.radio-item input {
+    display: none; /* Sembunyikan bullet default */
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #777;
+    transition: all 0.3s;
+    background: #fff;
+}
+
+.radio-item input:checked + .radio-label {
+    border-color: var(--primary-color);
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Custom Slider (Linear Scale) */
+.range-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f9f9f9;
+    padding: 10px 15px;
+    border-radius: 15px;
+}
+
+.slider {
+    flex: 1;
+    height: 8px;
+    border-radius: 5px;
+    background: #ccc;
+    outline: none;
+    -webkit-appearance: none; /* Override default look */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 4px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: transform 0.1s;
+}
+
+.slider::-webkit-slider-thumb:active { transform: scale(1.2); }
+
+.range-min, .range-max {
+    font-weight: bold;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+/* Custom Date Input (3 Kolom) */
+.date-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.date-input-group input[type="number"] {
+    width: 130px;
+    text-align: center;
+}
+.date-input-group select {
+    flex: none; /* Jangan membesar otomatis */
+    width: 180px;    /* Lebar sesuai isi teks */
+    min-width: 130px; /* Jaga-jaga biar gak kekecilan pas pilih 'Mei' */
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Buttons */
+.action-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.05rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s;
+    box-shadow: 0 4px 10px rgba(30, 111, 117, 0.2);
+}
+.action-btn:hover { background: #175a5e; }
+
+.reset-btn {
+    width: 100%;
+    padding: 12px;
+    background: #bdc3c7;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    margin-top: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.reset-btn:hover { background: #95a5a6; }
+
+/* Info Box */
+.info-box {
+    background: var(--accent-color);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--primary-color);
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+.info-text {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* =========================================
+   7. RESULT STYLING (Center & Table)
+   ========================================= */
+.result-box {
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    display: none;
+    text-align: center; /* Center Alignment */
+    animation: fadeIn 0.5s;
+}
+
+.result-box h3 {
+    margin-top: 0;
+    color: var(--secondary-color);
+    border-bottom: 3px solid var(--primary-color);
+    display: inline-block;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.result-item {
+    margin-bottom: 15px;
+    font-size: 1.05rem;
+}
+
+.result-divider {
+    height: 1px;
+    background: #eee;
+    margin: 15px auto;
+    width: 80%;
+}
+
+/* Tabel Hasil Kehamilan */
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.result-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+    vertical-align: middle;
+}
+.result-table tr:last-child td { border-bottom: none; }
+
+.result-table td strong {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    display: block;
+    margin-top: 5px;
+}
+
+/* =========================================
+   8. FOOTER & MARQUEE (Seamless Loop)
+   ========================================= */
+footer {
+    background: var(--secondary-color);
+    color: white;
+    padding-top: 40px;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.footer-title h3 {
+    margin: 0;
+    color: #D4AF37; /* Emas */
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-title p {
+    margin: 10px auto 30px;
+    font-size: 0.95rem;
+    font-style: italic;
+    opacity: 0.8;
+    max-width: 600px;
+    padding: 0 20px;
+}
+
+/* Marquee Container */
+.marquee-container {
+    background: white;
+    padding: 25px 0;
+    overflow: hidden;
+    position: relative;
+    border-top: 5px solid var(--primary-color);
+}
+
+/* Marquee Content (Seamless Logic) */
+.marquee-content {
+    display: flex;
+    width: max-content; /* Lebar mengikuti konten agar bisa loop */
+    animation: marquee 30s linear infinite; /* Durasi Loop */
+}
+
+.marquee-content img {
+    height: 60px; /* Ukuran Logo */
+    margin: 0 40px; /* Jarak antar logo */
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.marquee-content img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.copyright {
+    padding: 20px;
+    background: #3e2b24; /* Cokelat lebih gelap */
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+/* =========================================
+   9. ANIMATIONS & RESPONSIVE
+   ========================================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Marquee Animation: Geser -50% lalu reset (karena gambar diduplikasi) */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .hero-content h1 { font-size: 1.8rem; }
+    .tabs { flex-direction: column; }
+    .nav-logo, .nav-logo-garut { height: 40px; }
+    .marquee-content img { height: 40px; margin: 0 20px; }
+}
