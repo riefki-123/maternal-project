@@ -272,6 +272,7 @@ window.hitungStatus = function() {
         <hr style="margin-top:20px;">
         <p style="font-size:0.9em; text-align:center;"><em>Segera konsultasikan dengan Bidan Desa jika hasil menunjukan tanda "Kurang" atau "Stunted Risk".</em></p>
     `;
+    renderChart(gender, parseInt(umur), berat);
 }
 
 // ===========================================
@@ -359,3 +360,140 @@ window.hitungKehamilan = function() {
         </div>
     `;
 }
+
+// ============================================
+// 1. LOGIKA PWA (INSTALL & SERVICE WORKER)
+// ============================================
+
+// Mendaftarkan Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then((reg) => console.log('Service Worker terdaftar!', reg))
+            .catch((err) => console.log('Gagal daftar SW:', err));
+    });
+}
+
+// Logika Tombol Install Manual
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block'; // Munculkan tombol
+});
+
+installBtn.addEventListener('click', (e) => {
+    installBtn.style.display = 'none';
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+            console.log('User menginstall aplikasi');
+        }
+        deferredPrompt = null;
+    });
+});
+
+// ============================================
+// 2. LOGIKA CHART.JS (INOVASI GRAFIK)
+// ============================================
+let myChart = null; // Variabel global untuk chart
+
+function renderChart(gender, umurInput, beratInput) {
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    document.getElementById('chart-wrapper').style.display = 'block';
+
+    // 1. Siapkan Data Garis Min & Max (KMS) 0-24 Bulan
+    // Kita ambil data dari object dataPertumbuhan dan ubah jadi Array
+    const labels = []; // 0, 1, 2... 24
+    const dataMin = [];
+    const dataMax = [];
+    
+    // Loop 0-24 untuk membentuk garis kurva
+    for(let i=0; i<=24; i++) {
+        labels.push(i);
+        // Pastikan data ada (jika pakai Grid tombol non-interpolasi, ambil data terdekat atau null)
+        // Agar grafik mulus, sebaiknya data JSON lengkap 0-24 (interpolasi)
+        // Tapi jika pakai data bolong, Chart.js bisa handle (akan putus garisnya, atau connect gaps)
+        if(dataPertumbuhan[gender][i]) {
+            dataMin.push(dataPertumbuhan[gender][i].bb[0]);
+            dataMax.push(dataPertumbuhan[gender][i].bb[1]);
+        } else {
+            // Fallback sederhana jika data bolong: ambil rata-rata tetangga (simple interpolation logic)
+            // Atau biarkan null agar garis putus
+            dataMin.push(null); 
+            dataMax.push(null);
+        }
+    }
+
+    // 2. Siapkan Data Posisi Anak (Hanya 1 titik)
+    const dataAnak = new Array(25).fill(null); // Kosongkan semua
+    dataAnak[umurInput] = beratInput; // Isi hanya di bulan si anak
+
+    // 3. Hapus Chart lama jika ada (agar tidak tumuk)
+    if(myChart) {
+        myChart.destroy();
+    }
+
+    // 4. Buat Chart Baru
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Posisi Anak',
+                    data: dataAnak,
+                    backgroundColor: '#1E6F75',
+                    borderColor: '#1E6F75',
+                    pointRadius: 8, // Titik besar
+                    pointHoverRadius: 10,
+                    showLine: false // Jangan tarik garis, cuma titik
+                },
+                {
+                    label: 'Batas Atas (Ideal)',
+                    data: dataMax,
+                    borderColor: 'rgba(39, 174, 96, 0.5)', // Hijau transparan
+                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                    fill: '+1', // Fill area antara garis ini dan bawahnya
+                    pointRadius: 0,
+                    tension: 0.4 // Garis melengkung halus
+                },
+                {
+                    label: 'Batas Bawah (Ideal)',
+                    data: dataMin,
+                    borderColor: 'rgba(39, 174, 96, 0.5)',
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    pointRadius: 0,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    title: { display: true, text: 'Berat Badan (kg)' },
+                    suggestedMin: 0,
+                    suggestedMax: 15
+                },
+                x: {
+                    title: { display: true, text: 'Umur (Bulan)' }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Grafik Pertumbuhan Anak'
+                },
+                legend: {
+                    labels: { boxWidth: 10 }
+                }
+            }
+        }
+    });
+}
+
