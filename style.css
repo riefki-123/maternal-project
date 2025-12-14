@@ -88,6 +88,95 @@ body {
     opacity: 0.9;
 }
 
+/* === TAMBAHAN UNTUK TUTORIAL & TOMBOL === */
+
+/* Container Tombol di Hero agar rapi */
+.hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-top: 25px;
+}
+
+/* Tombol Sekunder (Cara Install) */
+.secondary-button {
+    display: inline-block;
+    background: transparent;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 2px solid rgba(255,255,255,0.7);
+    transition: all 0.3s;
+}
+.secondary-button:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+/* Styling Halaman Tutorial */
+.tutorial-intro { text-align: center; margin-bottom: 30px; }
+.tutorial-intro h2 { color: var(--primary-color); margin: 10px 0; }
+.tutorial-section { display: none; animation: fadeIn 0.5s; }
+.tutorial-section.active { display: block; }
+
+.step-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eee;
+}
+
+.step-number {
+    background: var(--primary-color);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.step-content h4 { margin: 0 0 5px 0; color: var(--secondary-color); }
+.step-content p { margin: 0; font-size: 0.95rem; color: #555; }
+
+/* Placeholder Screenshot */
+.step-img {
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+.step-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.success-box {
+    background: #e8f6f3;
+    color: var(--success-color);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Responsif tombol di HP */
+@media (min-width: 600px) {
+    .hero-buttons { flex-direction: row; justify-content: center; }
+}
+
 .cta-button {
     display: inline-block;
     background: #D4AF37; /* Warna Emas */

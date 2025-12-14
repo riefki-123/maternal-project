@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cara Install Si-LIMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        <div class="logo-container">
+             <span style="font-weight:bold; color:var(--primary-color);">Panduan Instalasi</span>
+        </div>
+    </nav>
+
+    <div class="container app-container">
+        
+        <div class="tutorial-intro">
+            <i class="fa-solid fa-mobile-screen-button" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 10px;"></i>
+            <h2>Pasang Si-LIMA di HP Anda</h2>
+            <p>Agar lebih mudah diakses tanpa mengetik alamat web lagi dan bisa digunakan <strong>tanpa kuota internet (Offline)</strong>.</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTutorial('android')">
+                <i class="fa-brands fa-android"></i> Android
+            </button>
+            <button class="tab-btn" onclick="switchTutorial('ios')">
+                <i class="fa-brands fa-apple"></i> iPhone (iOS)
+            </button>
+        </div>
+
+        <div id="android" class="tutorial-section active">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Buka Menu Chrome</h4>
+                    <p>Tekan ikon <strong>Titik Tiga</strong> <i class="fa-solid fa-ellipsis-vertical"></i> di pojok kanan atas layar HP Anda.</p>
+                </div>
+                <div class="step-img"><img src="img/android1.jpg" alt="Titik Tiga Chrome"></div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Tambahkan ke Layar</h4>
+                    <p>Cari dan pilih menu <strong>"Tambahkan ke Layar Utama"</strong> atau <em>"Install App"</em>.</p>
+                </div>
+                <div class="step-img"><img src="img/android2.jpg" alt="Menu Install"></div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Konfirmasi</h4>
+                    <p>Tekan tombol <strong>Install</strong> atau <strong>Tambahkan</strong> pada jendela yang muncul.</p>
+                </div>
+                <div class="step-img"><img src="img/android3.jpg" alt="Konfirmasi Install"></div>
+            </div>
+            
+            <div class="success-box">
+                <i class="fa-solid fa-check-circle"></i> Selesai! Ikon <strong>Si-LIMA</strong> sekarang ada di menu HP Anda.
+            </div>
+        </div>
+
+        <div id="ios" class="tutorial-section">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Tekan Tombol Share</h4>
+                    <p>Di browser Safari, tekan ikon <strong>Share</strong> <i class="fa-solid fa-arrow-up-from-bracket"></i> di bagian bawah tengah layar.</p>
+                </div>
+                <div class="step-img"><img src="assets/img/tut_ios_1.jpg" alt="Share Safari"></div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Pilih Add to Home Screen</h4>
+                    <p>Geser ke bawah dan pilih menu <strong>"Add to Home Screen"</strong> (Tambah ke Layar Utama).</p>
+                </div>
+                <div class="step-img"><img src="assets/img/tut_ios_2.jpg" alt="Add Home Screen"></div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Selesai</h4>
+                    <p>Tekan <strong>Add</strong> di pojok kanan atas. Aplikasi siap digunakan!</p>
+                </div>
+                <div class="step-img"><img src="assets/img/tut_ios_3.jpg" alt="Button Add"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTutorial(os) {
+            // Sembunyikan semua section
+            document.querySelectorAll('.tutorial-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            // Tampilkan yang dipilih
+            document.getElementById(os).classList.add('active');
+            
+            // Update tombol aktif
+            const btns = document.querySelectorAll('.tab-btn');
+            if(os === 'android') btns[0].classList.add('active');
+            else btns[1].classList.add('active');
+        }
+    </script>
+</body>
+</html>
