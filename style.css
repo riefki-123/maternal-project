@@ -635,3 +635,41 @@ footer {
     .nav-logo, .nav-logo-garut { height: 40px; }
     .marquee-content img { height: 40px; margin: 0 20px; }
 }
+
+/* === TAMBAHAN FOOTER SOCIAL MEDIA === */
+
+.footer-socials {
+    margin: 20px 0 30px; /* Jarak atas-bawah */
+}
+
+.footer-socials p {
+    margin: 0 0 15px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 25px; /* Jarak antar ikon */
+}
+
+.social-link {
+    color: white;
+    font-size: 1.8rem; /* Ukuran Ikon */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1); /* Lingkaran transparan */
+    text-decoration: none;
+}
+
+.social-link:hover {
+    background: #D4AF37; /* Warna Emas saat disentuh */
+    color: var(--secondary-color);
+    transform: translateY(-5px); /* Efek naik sedikit */
+}
