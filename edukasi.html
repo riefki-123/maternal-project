@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Belajar - Si-LIMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="edukasi.css"> </head>
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+        <div class="logo-container">
+             <span style="font-weight:bold; color:var(--primary-color);">Ruang Belajar Bunda</span>
+        </div>
+    </nav>
+
+<div class="container app-container">
+        
+        <div class="edu-header text-center">
+            <i class="fa-solid fa-graduation-cap" style="font-size: 3rem; color: var(--primary-color);"></i>
+            <h2>Ruang Belajar Bunda</h2>
+            <p>Panduan kesehatan terpercaya untuk Ibu dan Buah Hati.</p>
+        </div>
+
+        <div class="team-section">
+            <h3 class="team-heading">Tim Di Balik Si-LIMA</h3>
+            
+            <div class="team-grid">
+                <div class="team-card medis">
+                    <div class="img-box">
+                        <img src="img/dpl.jpg" onerror="this.src='https://via.placeholder.com/150?text=Ibu+DPL'" alt="Ibu Dosen">
+                    </div>
+                    <h4>Ernawati, SST.,Bdn.,M.Kes</h4>
+                    <span class="role-badge">Kurikulum & Maternal</span>
+                    
+                    <div class="cv-content">
+                        <p class="cv-category"><i class="fa-solid fa-university"></i> <strong>Akademik:</strong></p>
+                        <ul>
+                            <li>Dosen Kebidanan STIKes Karsa Husada Garut</li>
+                            <li>Sekretaris Senat SKHG</li>
+                            <li>Kepala Urusan Kemahasiswaan Sarjana Kebidanan</li>
+                            <li>Ketua PPKPT SKHG</li>
+                        </ul>
+
+                        <p class="cv-category"><i class="fa-solid fa-user-doctor"></i> <strong>Praktisi:</strong></p>
+                        <ul>
+                            <li>Pemilik TPMB Bidan Delima</li>
+                            <li>Praktisi Tehnik DCC</li>
+                            <li>Pembina Pengajian Ar Roja</li>
+                            <li>Pemateri Kespro & KIA</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="team-card tech">
+                    <div class="img-box">
+                        <img src="img/dev.jpg" onerror="this.src='https://via.placeholder.com/150?text=Ketua+KKN'" alt="Ketua KKN">
+                    </div>
+                    <h4>Riefki Nugraha</h4>
+                    <span class="role-badge tech-badge">Pengembang Aplikasi</span>
+                    
+                    <div class="cv-content">
+                        <p class="cv-category"><i class="fa-solid fa-laptop-code"></i> <strong>Akademik:</strong></p>
+                        <ul>
+                            <li>Ketua KKN Gradasi 03 Desa Karyamukti 2025</li>
+                            <li>CoreTeam Divisi IoT RumusMuda 2025</li>
+                            <li>Juara 2 Inovasi IoT "Pesta Rakyat Uniga" 2025</li>
+                            <li>PIC Divisi IoT - UKM RIT 2024</li>
+                            <li>15 Mahasiswa Berprestasi dari Pertamina Goes to Campus 2024</li>
+                        </ul>
+                        <p class="quote"><em>"Rasa Sakit adalah jaminan, penderitaan itu topingnya"</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="materi-container">
+            <p class="text-center">Memuat materi...</p>
+        </div>
+
+        <div class="text-center" style="margin-top: 30px; font-size: 0.8rem; color: #888;">
+            &copy; Tim KKN Gradasi 03 - Materi Bersumber dari Kemenkes RI
+        </div>
+
+        <div id="imageModal" class="image-modal" onclick="closeModal()">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
+    </div>
+
+    <script src="edukasi.js"></script>
+</body>
+</html>

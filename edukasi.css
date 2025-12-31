@@ -1,0 +1,418 @@
+/* Styling Khusus Halaman Edukasi */
+
+.edu-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Kartu Materi (Accordion) */
+.edu-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.edu-card.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 15px rgba(30, 111, 117, 0.15);
+}
+
+/* Header Kartu (Yang diklik) */
+.edu-card-header {
+    padding: 15px;
+    background: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.edu-card.active .edu-card-header {
+    background: var(--accent-color);
+    color: var(--primary-color);
+}
+
+.edu-title h4 { margin: 0; font-size: 1rem; }
+.edu-title span { font-size: 0.85rem; color: #666; font-weight: normal; }
+.edu-icon { transition: transform 0.3s; }
+.edu-card.active .edu-icon { transform: rotate(180deg); }
+
+/* Isi Materi (Hidden by default) */
+.edu-content {
+    display: none;
+    padding: 20px;
+    background: white;
+    animation: slideDown 0.3s ease;
+}
+.edu-card.active .edu-content { display: block; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Gambar Materi */
+.edu-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #eee; /* Placeholder warna */
+}
+
+/* Teks Materi */
+.edu-text p {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #444;
+    text-align: justify;
+}
+
+/* Tombol Video Youtube */
+.yt-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #c0392b; /* Warna Youtube */
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 15px 0;
+    transition: 0.3s;
+}
+.yt-btn:hover { background: #e74c3c; }
+
+/* Kuis Section */
+.quiz-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px dashed #eee;
+}
+.quiz-box {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.quiz-question { font-weight: bold; margin-bottom: 10px; display: block; }
+
+.quiz-option {
+    display: block;
+    padding: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.quiz-option:hover { background: #f0f0f0; }
+
+/* Feedback Jawaban */
+.quiz-option.correct {
+    background: #d4edda; border-color: #c3e6cb; color: #155724;
+}
+.quiz-option.wrong {
+    background: #f8d7da; border-color: #f5c6cb; color: #721c24;
+}
+.quiz-explanation {
+    font-size: 0.9rem;
+    margin-top: 8px;
+    padding: 8px;
+    background: #e2e3e5;
+    border-radius: 5px;
+    display: none; /* Muncul setelah jawab */
+}
+
+/* --- UPDATE: GAMBAR SERAGAM & YOUTUBE KEREN --- */
+
+/* 1. Solusi Gambar Beda Ukuran */
+.edu-img {
+    width: 100%;
+    height: 200px; /* Kita kunci tingginya */
+    object-fit: cover; /* AJAIB: Memotong gambar agar pas tanpa gepeng */
+    border-radius: 12px;
+    margin-bottom: 15px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+}
+
+/* 2. Tampilan Youtube Thumbnail Keren */
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9; /* Agar rasio selalu pas seperti TV */
+    background: #000;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.video-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.9); /* Merah Youtube */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 0 20px rgba(255,0,0,0.4);
+    transition: 0.3s;
+}
+
+.video-wrapper:hover .video-thumb { opacity: 0.6; }
+.video-wrapper:hover .play-icon { transform: translate(-50%, -50%) scale(1.1); }
+
+/* === FITUR ZOOM GAMBAR (LIGHTBOX) === */
+
+/* Container Gambar Materi agar bisa dikasih ikon zoom */
+.edu-img-wrapper {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+/* Gambar asli di kartu */
+.edu-img {
+    margin-bottom: 0; /* Reset margin karena sudah dibungkus wrapper */
+    display: block;
+    transition: transform 0.3s;
+}
+
+/* Efek Hover: Gambar agak zoom dikit */
+.edu-img-wrapper:hover .edu-img {
+    transform: scale(1.05);
+}
+
+/* Ikon Kaca Pembesar di pojok kanan bawah gambar */
+.zoom-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    pointer-events: none; /* Agar klik tembus ke wrapper */
+}
+
+/* === TAMPILAN MODAL (SAAT DIKLIK) === */
+.image-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 9999; /* Paling atas */
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9); /* Latar Hitam Gelap */
+    animation: fadeIn 0.3s;
+}
+
+/* Gambar di dalam Modal (Full Size) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 90%;
+    max-width: 700px; /* Batas maksimal lebar di laptop */
+    max-height: 80vh; /* Agar tidak kepanjangan ke bawah */
+    object-fit: contain; /* Gambar utuh tidak terpotong */
+    border-radius: 8px;
+    animation: zoomIn 0.3s;
+}
+
+/* Caption di bawah gambar */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Tombol Close (X) */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.close-btn:hover { color: #bbb; }
+
+/* Animasi Zoom */
+@keyframes zoomIn {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* === TEAM PROFILE SECTION (CV) === */
+
+.team-section {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px dashed #ddd;
+}
+
+.team-heading {
+    text-align: center;
+    color: var(--secondary-color);
+    margin-bottom: 25px;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dua kolom sejajar */
+    gap: 20px;
+}
+
+/* Kartu Dasar */
+.team-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-top: 5px solid #ccc;
+    transition: transform 0.3s;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Foto Profil Bulat */
+.img-box img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+}
+
+.team-card h4 {
+    margin: 5px 0;
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+}
+
+/* Badge Peran */
+.role-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 15px;
+}
+
+/* Konten CV */
+.cv-content {
+    text-align: left;
+    font-size: 0.9rem;
+    margin-top: 15px;
+}
+
+.cv-category {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 3px;
+}
+
+.cv-content ul {
+    margin: 0 0 15px 0;
+    padding-left: 20px;
+    color: #555;
+}
+
+.cv-content li {
+    margin-bottom: 4px;
+}
+
+/* --- TEMA KHUSUS (MEDIS vs TECH) --- */
+
+/* Tema Medis (Ibu DPL) - Hijau/Teal */
+.team-card.medis {
+    border-top-color: var(--primary-color);
+    background: linear-gradient(to bottom, #f0fdfa, white);
+}
+.team-card.medis .role-badge {
+    background: var(--primary-color);
+}
+.team-card.medis .cv-category {
+    color: var(--primary-color);
+}
+
+/* Tema Teknis (Anda) - Emas/Cokelat */
+.team-card.tech {
+    border-top-color: #D4AF37;
+    background: linear-gradient(to bottom, #fffdf5, white);
+}
+.team-card.tech .role-badge {
+    background: #D4AF37; /* Emas */
+    color: #5D4037;
+}
+.team-card.tech .cv-category {
+    color: #D4AF37;
+}
+.quote {
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+    margin-top: 10px;
+    display: block;
+}
+
+/* Responsif di HP (Stack ke bawah) */
+@media (max-width: 600px) {
+    .team-grid {
+        grid-template-columns: 1fr; /* Jadi satu kolom */
+    }
+}

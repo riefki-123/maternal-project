@@ -11,6 +11,7 @@
     <meta name="theme-color" content="#1E6F75">
     <link rel="apple-touch-icon" href="img/android-chrome-192x192.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -97,7 +98,15 @@
                 <button class="reset-btn" onclick="resetForm()">Ulangi Pengecekan</button>
             </div>
             
-            <div id="hasil-anak" class="result-box"></div>
+            <div id="hasil-anak" class="result-box">
+            </div>
+            <button id="btn-export-anak" class="action-btn" style="display:none; background:#2980b9; margin-top:10px;" onclick="downloadHasil('hasil-anak', 'Laporan_Tumbuh_Kembang')">
+                <i class="fa-solid fa-image"></i> Simpan Hasil (Gambar)
+            </button>
+
+            <div class="chart-container" style="position: relative; height:300px; width:100%; margin-top:20px; display:none;" id="chart-wrapper">
+                <canvas id="growthChart"></canvas>
+            </div>
         </div>
 
         <div id="kehamilan" class="section">

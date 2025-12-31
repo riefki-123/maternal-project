@@ -102,31 +102,18 @@ const dataKehamilan = {
     43: { bbJanin: "4.501 gr", bbIbu: "12.7 kg", tbJanin: "52.5 cm" }
 };
 
-// --- LOGIKA INISIALISASI (LANDING PAGE) ---
-const carousel = document.getElementById('carousel');
-if (carousel) {
-    let slideIndex = 0;
-    const slides = document.querySelectorAll('.slide');
-    const totalSlides = slides.length;
 
-    function moveSlide(n) {
-        slideIndex += n;
-        if (slideIndex >= totalSlides) { slideIndex = 0; }
-        if (slideIndex < 0) { slideIndex = totalSlides - 1; }
-        updateCarousel();
-    }
-
-    function updateCarousel() {
-        const offset = -slideIndex * 100;
-        carousel.style.transform = `translateX(${offset}%)`;
-    }
-    // Auto slide landing page
-    setInterval(() => { moveSlide(1); }, 4000);
+// --- UTILITY: VALIDASI TANGGAL KETAT (FIX ISU FEBRUARI 31) ---
+function isValidDate(day, month, year) {
+    // Month di JS 0-11, jadi tidak perlu +1 di sini karena input value kita sesuaikan nanti
+    const date = new Date(year, month, day);
+    // Cek apakah JS menggeser tanggalnya (misal 31 Feb jadi 3 Mar)
+    return date.getFullYear() === year && date.getMonth() === month && date.getDate() === day;
 }
 
-// --- LOGIKA INISIALISASI (APP PAGE) ---
+// --- LOGIKA UTAMA ---
+
 if (document.getElementById('umur')) {
-    // Set Default Date hari ini untuk input pengecekan
     const today = new Date();
     const cekD = document.getElementById('cek_d');
     const cekM = document.getElementById('cek_m');
@@ -139,14 +126,11 @@ if (document.getElementById('umur')) {
     }
 }
 
-// --- FUNGSI UPDATE DISPLAY SLIDER ---
-// Agar angka di sebelah slider berubah saat digeser
 window.updateUmurDisplay = function(val) {
     const display = document.getElementById('umur-display');
     if(display) display.innerText = val;
 }
 
-// --- FUNGSI NAVIGASI TABS ---
 window.switchTab = function(tabId) {
     document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -158,46 +142,41 @@ window.switchTab = function(tabId) {
 }
 
 // ===========================================
-// FITUR 1: LOGIKA PERTUMBUHAN ANAK
+// FITUR 1: LOGIKA PERTUMBUHAN ANAK (FIXED)
 // ===========================================
 
 window.tampilkanReferensi = function() {
-    // 1. Ambil Gender dari Radio Button
     const genderEl = document.querySelector('input[name="gender"]:checked');
     if(!genderEl) return;
     const gender = genderEl.value;
-    
-    // 2. Ambil Umur dari Slider
     const umur = document.getElementById('umur').value;
 
-    // 3. Cek Database (PENTING: Cegah Error Undefined)
     if (!dataPertumbuhan[gender] || !dataPertumbuhan[gender][umur]) {
-        alert("Maaf, data untuk bulan ini belum tersedia di database.");
+        alert("Maaf, data untuk bulan ini belum tersedia.");
         return;
     }
     
     const standar = dataPertumbuhan[gender][umur];
 
-    // 4. Tampilkan Tabel Referensi
     document.getElementById('label-umur').innerText = umur + " Bulan";
     document.getElementById('ref-bb').innerText = standar.bb[0] + " - " + standar.bb[1] + " kg";
     document.getElementById('ref-tb').innerText = standar.tb[0] + " - " + standar.tb[1] + " cm";
 
-    // 5. Ganti Tampilan ke Step 2 (Input Data)
     document.getElementById('step-1').style.display = 'none';
     document.getElementById('step-2').style.display = 'block';
     document.getElementById('hasil-anak').style.display = 'none';
+    document.getElementById('btn-export-anak').style.display = 'none';
 }
 
 window.resetForm = function() {
     document.getElementById('step-2').style.display = 'none';
     document.getElementById('step-1').style.display = 'block';
-    
-    // Kosongkan input
     document.getElementById('berat').value = '';
     document.getElementById('tinggi').value = '';
     document.getElementById('kepala').value = '';
     document.getElementById('hasil-anak').style.display = 'none';
+    document.getElementById('btn-export-anak').style.display = 'none';
+    document.getElementById('chart-wrapper').style.display = 'none';
 }
 
 window.hitungStatus = function() {
@@ -214,103 +193,122 @@ window.hitungStatus = function() {
         return;
     }
     
-    // Ambil standar (Pastikan data ada)
     const standar = dataPertumbuhan[gender][umur];
     if(!standar) { alert("Data standar tidak ditemukan."); return; }
 
     const resultBox = document.getElementById('hasil-anak');
+    const btnExport = document.getElementById('btn-export-anak');
 
-    // -- Helper Function Status BB --
+    // -- LOGIKA SKRINING (BUKAN VONIS) --
+    // Menggunakan istilah "Pita Hijau" sesuai KMS
+    
     function getStatusBB(val, min, max) {
-        if (val < min) return `<span style='color:#c0392b; font-weight:bold;'><i class="fa-solid fa-circle-xmark icon-danger"></i> Kurang (Underweight)</span>`;
-        if (val > max) return `<span style='color:#f39c12; font-weight:bold;'><i class="fa-solid fa-triangle-exclamation icon-warning"></i> Berlebih (Overweight)</span>`;
-        return `<span style='color:#27ae60; font-weight:bold;'><i class="fa-solid fa-circle-check icon-ideal"></i> Ideal (Normal)</span>`;
+        if (val < min) return `<span style='color:#c0392b; font-weight:bold;'><i class="fa-solid fa-triangle-exclamation"></i> Resiko Berat Kurang<br><small style='color:#555; font-weight:normal;'>Di bawah Pita Hijau/Standar. Pantau asupan gizi.</small></span>`;
+        if (val > max) return `<span style='color:#f39c12; font-weight:bold;'><i class="fa-solid fa-triangle-exclamation"></i> Resiko Berat Lebih<br><small style='color:#555; font-weight:normal;'>Di atas Pita Hijau/Standar.</small></span>`;
+        return `<span style='color:#27ae60; font-weight:bold;'><i class="fa-solid fa-circle-check"></i> Pita Hijau (Aman)<br><small style='color:#555; font-weight:normal;'>Pertumbuhan sesuai jalur standar.</small></span>`;
     }
     
-    // -- Helper Function Status TB --
     function getStatusTB(val, min, max) {
-        if (val < min) return `<span style='color:#c0392b; font-weight:bold;'><i class="fa-solid fa-circle-xmark icon-danger"></i> Pendek (Stunted Risk)</span>`;
-        if (val > max) return `<span style='color:#f39c12; font-weight:bold;'><i class="fa-solid fa-triangle-exclamation icon-warning"></i> Tinggi</span>`;
-        return `<span style='color:#27ae60; font-weight:bold;'><i class="fa-solid fa-circle-check icon-ideal"></i> Ideal (Normal)</span>`;
+        if (val < min) return `<span style='color:#c0392b; font-weight:bold;'><i class="fa-solid fa-triangle-exclamation"></i> Resiko Pendek<br><small style='color:#555; font-weight:normal;'>Di bawah standar tinggi badan.</small></span>`;
+        if (val > max) return `<span style='color:#f39c12; font-weight:bold;'><i class="fa-solid fa-ruler"></i> Perawakan Tinggi<br><small style='color:#555; font-weight:normal;'>Di atas rata-rata.</small></span>`;
+        return `<span style='color:#27ae60; font-weight:bold;'><i class="fa-solid fa-circle-check"></i> Pita Hijau (Aman)<br><small style='color:#555; font-weight:normal;'>Tinggi badan ideal.</small></span>`;
     }
 
     const statusBB = getStatusBB(berat, standar.bb[0], standar.bb[1]);
     const statusTB = getStatusTB(tinggi, standar.tb[0], standar.tb[1]);
     
-    // Logic Lingkar Kepala
     let infoKepala = "";
     if (kepala) {
         infoKepala = `
         <div class="result-divider"></div>
-        <div class="result-item">
-            <p style="margin-bottom:5px;"><strong>Lingkar Kepala (${kepala} cm):</strong></p>
-            <span style="color:#7f8c8d;"><i class="fa-solid fa-ruler"></i> Data Dicatat (Cek KMS)</span>
+        <div class="result-item compact-item">
+            <span class="res-label">Lingkar Kepala:</span>
+            <span class="res-value">${kepala} cm</span>
         </div>`;
     }
 
     resultBox.style.display = 'block';
+    btnExport.style.display = 'block'; // Tampilkan tombol download
     
-    // Output HTML
+    // TAMPILAN COMPACT (Cocok untuk Screenshot)
     resultBox.innerHTML = `
-        <h3>Hasil Analisis</h3>
-        <p style="color:#777; margin-bottom:20px;">${gender === 'laki' ? 'Laki-laki' : 'Perempuan'}, ${umur} Bulan</p>
-        
-        <div class="result-item">
-            <p style="margin-bottom:5px;"><strong>Berat Badan (${berat} kg):</strong></p>
-            ${statusBB}
+        <div style="border-bottom: 2px dashed #ccc; padding-bottom:10px; margin-bottom:10px;">
+            <h3 style="margin:0; font-size:1.2rem; color:var(--primary-color);">HASIL SKRINING AWAL</h3>
+            <span style="font-size:0.85rem; color:#777;">Si-LIMA Karyamukti - ${new Date().toLocaleDateString('id-ID')}</span>
         </div>
         
-        <div class="result-divider"></div>
-        
-        <div class="result-item">
-            <p style="margin-bottom:5px;"><strong>Tinggi Badan (${tinggi} cm):</strong></p>
-            ${statusTB}
+        <div class="result-grid">
+            <div class="res-row">
+                <strong>Anak:</strong> ${gender === 'laki' ? 'Laki-laki' : 'Perempuan'}, ${umur} Bulan
+            </div>
+            
+            <div class="result-divider"></div>
+            
+            <div class="result-item">
+                <p><strong>Berat (${berat} kg):</strong></p>
+                ${statusBB}
+            </div>
+            
+            <div class="result-divider"></div>
+            
+            <div class="result-item">
+                <p><strong>Tinggi (${tinggi} cm):</strong></p>
+                ${statusTB}
+            </div>
+            
+            ${infoKepala}
         </div>
         
-        ${infoKepala}
-        
-        <hr style="margin-top:20px;">
-        <p style="font-size:0.9em; text-align:center;"><em>Segera konsultasikan dengan Bidan Desa jika hasil menunjukan tanda "Kurang" atau "Stunted Risk".</em></p>
+        <div style="background:#fff3cd; color:#856404; padding:8px; font-size:0.8rem; margin-top:15px; border-radius:5px;">
+            <i class="fa-solid fa-info-circle"></i> <strong>Catatan:</strong> Ini adalah skrining awal berdasarkan standar WHO/Kemenkes. Untuk diagnosa medis (Stunting/Gizi Buruk), silakan validasi ke Bidan Desa/Puskesmas.
+        </div>
     `;
+    
+    // Render Grafik Chart.js
     renderChart(gender, parseInt(umur), berat);
 }
 
 // ===========================================
-// FITUR 2: LOGIKA KALENDER KEHAMILAN
+// FITUR 2: LOGIKA KEHAMILAN (FIXED DATE)
 // ===========================================
 
 window.hitungKehamilan = function() {
-    // 1. Ambil Input HPHT
     const d1 = parseInt(document.getElementById('hpht_d').value);
-    const m1 = parseInt(document.getElementById('hpht_m').value);
+    const m1 = parseInt(document.getElementById('hpht_m').value); // 0-11
     const y1 = parseInt(document.getElementById('hpht_y').value);
 
-    // 2. Ambil Input Cek
     const d2 = parseInt(document.getElementById('cek_d').value);
     const m2 = parseInt(document.getElementById('cek_m').value);
     const y2 = parseInt(document.getElementById('cek_y').value);
 
-    // 3. Validasi
+    // VALIDASI INPUT KOSONG
     if (!d1 || !y1 || !d2 || !y2) { alert("Mohon lengkapi semua kolom tanggal."); return; }
-    if (y1 < 2024 || y2 < 2024) { alert("Mohon masukkan Tahun minimal 2024 (Format Ribuan)."); return; }
+    
+    // VALIDASI TANGGAL KETAT (Pencegahan 31 Februari)
+    if (!isValidDate(d1, m1, y1)) {
+        alert("Tanggal HPHT tidak valid! Cek kembali jumlah hari pada bulan tersebut.");
+        return;
+    }
+    if (!isValidDate(d2, m2, y2)) {
+        alert("Tanggal Pengecekan tidak valid!");
+        return;
+    }
+
+    if (y1 < 2024 || y2 < 2024) { alert("Tahun minimal 2024."); return; }
     if (y1 > 3000 || y2 > 3000) { alert("Tahun tidak valid."); return; }
 
-    // Buat Object Date (Month di JS mulai dari 0)
     const hpht = new Date(y1, m1, d1);
     const cek = new Date(y2, m2, d2);
 
     if (cek < hpht) { alert("Tanggal cek tidak boleh sebelum HPHT."); return; }
 
-    // 4. Hitung Usia
     const diffTime = Math.abs(cek - hpht);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
     const usiaMinggu = Math.floor(diffDays / 7);
     const sisaHari = diffDays % 7;
     
-    // 5. Cari Data Statistik
     const stats = dataKehamilan[usiaMinggu];
     
-    // 6. Hitung HPL (+280 hari)
     const hpl = new Date(hpht); 
     hpl.setDate(hpl.getDate() + 280); 
 
@@ -318,125 +316,80 @@ window.hitungKehamilan = function() {
     const resultBox = document.getElementById('hasil-hamil');
 
     if (stats) {
-        // TAMPILAN TABEL SESUAI REQUEST USER
         contentData = `
             <table class="result-table">
-                <tr>
-                    <td>Berat Badan Janin<br><strong>${stats.bbJanin}</strong></td>
-                </tr>
-                <tr>
-                    <td>Tinggi Badan Janin<br><strong>${stats.tbJanin}</strong></td>
-                </tr>
-                <tr>
-                    <td>Kenaikan Berat Badan Ibu<br><strong>${stats.bbIbu}</strong></td>
-                </tr>
-            </table>`;
+                <tr><td>Est. Berat Janin<br><strong>${stats.bbJanin}</strong></td></tr>
+                <tr><td>Est. Panjang Janin<br><strong>${stats.tbJanin}</strong></td></tr>
+            </table>
+            <p style="font-size:0.8rem; color:#777; text-align:center; margin-top:5px;">
+                *Estimasi rata-rata. Kondisi asli tergantung gizi Ibu.
+            </p>`;
     } else {
-        if (usiaMinggu < 8) {
-             contentData = "<p class='info-text' style='margin-top:20px;'>Usia kehamilan awal (< 8 minggu). Grafik fisik janin belum tersedia.</p>";
-        } else if (usiaMinggu > 43) {
-             contentData = "<p class='info-text' style='margin-top:20px; color:red;'>Usia kehamilan melewati 43 minggu. Segera periksa ke Dokter!</p>";
-        } else {
-             contentData = "<p class='info-text' style='margin-top:20px;'>Data spesifik minggu ini tidak tersedia.</p>";
-        }
+        if (usiaMinggu < 8) contentData = "<p class='info-text'>Usia kehamilan awal (< 8 minggu).</p>";
+        else contentData = "<p class='info-text'>Data spesifik minggu ini tidak tersedia.</p>";
     }
 
     resultBox.style.display = 'block';
     
-    // Output HTML
     resultBox.innerHTML = `
         <h3>Usia Kehamilan</h3>
         <h1 style="color:var(--primary-color); font-size:2em; margin:10px 0;">${usiaMinggu} <span style="font-size:0.5em; color:#777;">Minggu</span></h1>
-        <p style="color:#777;">Lebih ${sisaHari} Hari</p>
+        <p style="color:#777;">+ ${sisaHari} Hari</p>
         
-        <div style="background:var(--accent-color); padding:10px; border-radius:8px; margin-top:20px;">
-            <p style="text-align:center; font-weight:bold; color:var(--secondary-color); margin-bottom:0;">Statistik Perkembangan</p>
+        <div style="background:var(--accent-color); padding:10px; border-radius:8px; margin-top:15px;">
             ${contentData}
         </div>
         
-        <div style="margin-top:20px; padding:15px; background:#e8f6f3; border-radius:8px; color:#16a085; text-align:center;">
-            <strong>Hari Perkiraan Lahir</strong><br>
-            <span style="font-size:1.2em; font-weight:bold;">${hpl.toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</span>
+        <div style="margin-top:15px; padding:10px; background:#e8f6f3; border-radius:8px; color:#16a085; text-align:center;">
+            <strong>HPL (Hari Perkiraan Lahir)</strong><br>
+            <span style="font-size:1.1em; font-weight:bold;">${hpl.toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</span>
         </div>
     `;
 }
 
-// ============================================
-// 1. LOGIKA PWA (INSTALL & SERVICE WORKER)
-// ============================================
-
-// Mendaftarkan Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-            .then((reg) => console.log('Service Worker terdaftar!', reg))
-            .catch((err) => console.log('Gagal daftar SW:', err));
+// ===========================================
+// FITUR EKSTRA: DOWNLOAD GAMBAR HASIL
+// ===========================================
+window.downloadHasil = function(elementId, fileName) {
+    const element = document.getElementById(elementId);
+    
+    // Gunakan html2canvas yang sudah diload di HTML
+    html2canvas(element, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = fileName + '_' + new Date().getTime() + '.jpg';
+        link.href = canvas.toDataURL('image/jpeg', 0.9);
+        link.click();
     });
 }
 
-// Logika Tombol Install Manual
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'block'; // Munculkan tombol
-});
-
-installBtn.addEventListener('click', (e) => {
-    installBtn.style.display = 'none';
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-            console.log('User menginstall aplikasi');
-        }
-        deferredPrompt = null;
-    });
-});
-
-// ============================================
-// 2. LOGIKA CHART.JS (INOVASI GRAFIK)
-// ============================================
-let myChart = null; // Variabel global untuk chart
+// ===========================================
+// LOGIKA GRAFIK CHART.JS (PITA WARNA)
+// ===========================================
+let myChart = null; 
 
 function renderChart(gender, umurInput, beratInput) {
     const ctx = document.getElementById('growthChart').getContext('2d');
     document.getElementById('chart-wrapper').style.display = 'block';
 
-    // 1. Siapkan Data Garis Min & Max (KMS) 0-24 Bulan
-    // Kita ambil data dari object dataPertumbuhan dan ubah jadi Array
-    const labels = []; // 0, 1, 2... 24
+    const labels = []; 
     const dataMin = [];
     const dataMax = [];
     
-    // Loop 0-24 untuk membentuk garis kurva
     for(let i=0; i<=24; i++) {
         labels.push(i);
-        // Pastikan data ada (jika pakai Grid tombol non-interpolasi, ambil data terdekat atau null)
-        // Agar grafik mulus, sebaiknya data JSON lengkap 0-24 (interpolasi)
-        // Tapi jika pakai data bolong, Chart.js bisa handle (akan putus garisnya, atau connect gaps)
         if(dataPertumbuhan[gender][i]) {
             dataMin.push(dataPertumbuhan[gender][i].bb[0]);
             dataMax.push(dataPertumbuhan[gender][i].bb[1]);
         } else {
-            // Fallback sederhana jika data bolong: ambil rata-rata tetangga (simple interpolation logic)
-            // Atau biarkan null agar garis putus
-            dataMin.push(null); 
-            dataMax.push(null);
+            dataMin.push(null); dataMax.push(null);
         }
     }
 
-    // 2. Siapkan Data Posisi Anak (Hanya 1 titik)
-    const dataAnak = new Array(25).fill(null); // Kosongkan semua
-    dataAnak[umurInput] = beratInput; // Isi hanya di bulan si anak
+    const dataAnak = new Array(25).fill(null);
+    dataAnak[umurInput] = beratInput;
 
-    // 3. Hapus Chart lama jika ada (agar tidak tumuk)
-    if(myChart) {
-        myChart.destroy();
-    }
+    if(myChart) myChart.destroy();
 
-    // 4. Buat Chart Baru
     myChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -447,23 +400,23 @@ function renderChart(gender, umurInput, beratInput) {
                     data: dataAnak,
                     backgroundColor: '#1E6F75',
                     borderColor: '#1E6F75',
-                    pointRadius: 8, // Titik besar
+                    pointRadius: 8,
                     pointHoverRadius: 10,
-                    showLine: false // Jangan tarik garis, cuma titik
+                    showLine: false 
                 },
                 {
-                    label: 'Batas Atas (Ideal)',
+                    label: 'Pita Hijau (Batas Atas)',
                     data: dataMax,
-                    borderColor: 'rgba(39, 174, 96, 0.5)', // Hijau transparan
-                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                    fill: '+1', // Fill area antara garis ini dan bawahnya
+                    borderColor: 'rgba(39, 174, 96, 0.3)',
+                    backgroundColor: 'rgba(39, 174, 96, 0.2)', // Area Hijau
+                    fill: '+1',
                     pointRadius: 0,
-                    tension: 0.4 // Garis melengkung halus
+                    tension: 0.4 
                 },
                 {
-                    label: 'Batas Bawah (Ideal)',
+                    label: 'Pita Hijau (Batas Bawah)',
                     data: dataMin,
-                    borderColor: 'rgba(39, 174, 96, 0.5)',
+                    borderColor: 'rgba(39, 174, 96, 0.3)',
                     backgroundColor: 'transparent',
                     fill: false,
                     pointRadius: 0,
@@ -475,25 +428,13 @@ function renderChart(gender, umurInput, beratInput) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: {
-                    title: { display: true, text: 'Berat Badan (kg)' },
-                    suggestedMin: 0,
-                    suggestedMax: 15
-                },
-                x: {
-                    title: { display: true, text: 'Umur (Bulan)' }
-                }
+                y: { title: { display: true, text: 'Berat Badan (kg)' }, suggestedMin: 0, suggestedMax: 15 },
+                x: { title: { display: true, text: 'Umur (Bulan)' } }
             },
             plugins: {
-                title: {
-                    display: true,
-                    text: 'Grafik Pertumbuhan Anak'
-                },
-                legend: {
-                    labels: { boxWidth: 10 }
-                }
+                title: { display: true, text: 'Grafik Posisi Pertumbuhan' },
+                legend: { labels: { boxWidth: 10 } }
             }
         }
     });
 }
-
